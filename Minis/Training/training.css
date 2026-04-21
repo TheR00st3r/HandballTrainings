@@ -1,0 +1,184 @@
+/* training.css - centralized styles for Training pages */
+:root {
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #4b5563;
+  --line: #d1d5db;
+  --accent: #0f766e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #eef6ff 0%, var(--bg) 100%);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+main {
+  max-width: 960px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+  color: #0b3f3a;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-top: 26px;
+  font-size: 1.35rem;
+  border-bottom: 2px solid #d9eeeb;
+  padding-bottom: 6px;
+}
+
+h3 {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+h4 {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: #0f4b46;
+}
+
+ul, ol {
+  margin-top: 6px;
+}
+
+li {
+  margin: 4px 0;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px 16px;
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+
+.meta strong {
+  color: var(--text);
+}
+
+.section {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fcfdfd;
+}
+
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-size: 11pt;
+    line-height: 1.35;
+  }
+
+  main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 18pt;
+    margin-bottom: 8pt;
+  }
+
+  h2 {
+    font-size: 14pt;
+    margin-top: 14pt;
+    border-bottom: 1px solid #999999;
+  }
+
+  h3 {
+    font-size: 12pt;
+  }
+
+  h4 {
+    font-size: 11pt;
+  }
+
+  .section {
+    border: 1px solid #cfcfcf;
+    background: #ffffff;
+    margin-top: 10pt;
+    padding: 8pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  ul, ol {
+    margin-top: 4pt;
+    margin-bottom: 6pt;
+  }
+
+  li {
+    margin: 2pt 0;
+  }
+
+  h4,
+  h4 + ul,
+  h4 + ol,
+  .meta {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* Gentle defaults for markdown-exported pages */
+.markdown-preview, .markdown-preview * {
+  box-sizing: border-box;
+}
+.markdown-preview {
+  width: 100%;
+  height: 100%;
+}
+.markdown-preview h1 { font-size: 1.8rem; }
+.markdown-preview h2 { font-size: 1.35rem; }
+.markdown-preview p { margin: 0 0 0.8rem 0; }
+.markdown-preview ul, .markdown-preview ol { margin: 0 0 1rem 1.25rem; }
+
+/* keep code blocks readable */
+pre { background: #f5f5f5; padding: 12px; overflow:auto; border-radius:6px; }
+code { font-family: Menlo,Monaco,Consolas,'Courier New',monospace; }
+
+/* small utility */
+.center { text-align: center; }
