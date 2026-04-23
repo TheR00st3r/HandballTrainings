@@ -6,19 +6,125 @@
   <title>Trainingsübersicht — Minis</title>
   <link rel="stylesheet" href="Minis/Training/training.css">
   <style>
-    body { max-width: 900px; margin: 36px auto; padding: 0 16px; }
-    .group { margin-bottom: 1.5em; }
-    .group h2 { margin-bottom: 0.5em; }
-    ul { list-style: none; padding-left: 0; }
-    li { margin: 6px 0; }
-    a { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(0,0,0,0.08); }
-    a:hover { text-decoration: underline; }
-    footer { margin-top: 2em; color: #666; font-size: 0.9em; }
+    :root {
+      --page-max: 980px;
+      --ink: #1f2a37;
+      --ink-soft: #4b5563;
+      --card: #ffffff;
+      --line: #d5dde8;
+      --accent: #0f766e;
+      --accent-soft: #d9f2ef;
+    }
+
+    body {
+      max-width: var(--page-max);
+      margin: 40px auto;
+      padding: 0 16px 32px;
+      color: var(--ink);
+    }
+
+    .hero {
+      background: linear-gradient(140deg, #f3fbff 0%, #f7f9ff 100%);
+      border: 1px solid #d9e7f9;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      color: var(--ink-soft);
+    }
+
+    .group {
+      margin-bottom: 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+    }
+
+    .group h2 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    li {
+      margin: 0;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: inherit;
+      text-decoration: none;
+      border: 1px solid #e8edf5;
+      border-radius: 10px;
+      background: #fbfdff;
+      padding: 9px 10px;
+      transition: border-color 120ms ease, transform 120ms ease, background 120ms ease;
+    }
+
+    a:hover {
+      border-color: #b8d8d3;
+      background: #f5fcfb;
+      transform: translateY(-1px);
+    }
+
+    .date {
+      font-variant-numeric: tabular-nums;
+      color: #0f4b46;
+      background: var(--accent-soft);
+      border: 1px solid #c7e8e4;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .title {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    footer {
+      margin-top: 16px;
+      color: #5b6472;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 680px) {
+      body {
+        margin-top: 20px;
+      }
+
+      a {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Trainingsübersicht — Minis</h1>
-  <p>Klicke auf einen Eintrag, um die Trainingbeschreibung zu öffnen.</p>
+  <header class="hero">
+    <h1>Trainingsübersicht - Minis</h1>
+    <p>Klicke auf einen Eintrag, um die Trainingsbeschreibung zu oeffnen.</p>
+  </header>
 
   <div class="group">
     <h2>2025_2026</h2>
@@ -58,5 +164,91 @@
   <footer>
     <small>Index erstellt: 2026-04-21</small>
   </footer>
+
+  <script>
+    (function () {
+      function formatDateFromToken(token) {
+        var match = /^(\d{4})(\d{2})(\d{2})$/.exec(token);
+        if (!match) return null;
+
+        var year = Number(match[1]);
+        var month = Number(match[2]);
+        var day = Number(match[3]);
+        var date = new Date(year, month - 1, day);
+
+        if (
+          date.getFullYear() !== year ||
+          date.getMonth() !== month - 1 ||
+          date.getDate() !== day
+        ) {
+          return null;
+        }
+
+        return new Intl.DateTimeFormat("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        }).format(date);
+      }
+
+      function toDisplayTitle(rawTitle) {
+        if (!rawTitle) return "Training";
+        return rawTitle.replace(/_/g, " ").trim();
+      }
+
+      var links = document.querySelectorAll(".group li a");
+      links.forEach(function (link) {
+        var href = link.getAttribute("href") || "";
+        var fileName = href.split("/").pop() || "";
+        var base = fileName.replace(/\.html$/i, "");
+
+        var match = /^(\d{8})(?:_(.+))?$/.exec(base);
+        var dateLabel = null;
+        var titleLabel = "";
+
+        if (match) {
+          dateLabel = formatDateFromToken(match[1]);
+          titleLabel = toDisplayTitle(match[2]);
+        }
+
+        if (!dateLabel) {
+          var fallback = /^(\d{8})/.exec(link.textContent.trim());
+          if (fallback) {
+            dateLabel = formatDateFromToken(fallback[1]);
+          }
+        }
+
+        if (!titleLabel) {
+          titleLabel = link.textContent.replace(/^\d{8}\s*/, "").trim() || "Training";
+        }
+
+        link.innerHTML = "";
+        if (dateLabel) {
+          var dateSpan = document.createElement("span");
+          dateSpan.className = "date";
+          dateSpan.textContent = dateLabel;
+          link.appendChild(dateSpan);
+        }
+
+        var titleSpan = document.createElement("span");
+        titleSpan.className = "title";
+        titleSpan.textContent = titleLabel;
+        link.appendChild(titleSpan);
+      });
+
+      var footer = document.querySelector("footer small");
+      if (footer) {
+        var footerMatch = /(\d{4})-(\d{2})-(\d{2})/.exec(footer.textContent);
+        if (footerMatch) {
+          var formatted = formatDateFromToken(
+            footerMatch[1] + footerMatch[2] + footerMatch[3]
+          );
+          if (formatted) {
+            footer.textContent = "Index erstellt: " + formatted;
+          }
+        }
+      }
+    })();
+  </script>
 </body>
 </html>
